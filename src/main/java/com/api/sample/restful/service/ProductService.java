@@ -1,7 +1,7 @@
 package com.api.sample.restful.service;
 
 import com.api.sample.restful.model.Product;
-import com.api.sample.restful.repository.ProductRespository;
+import com.api.sample.restful.repository.ProductRepository;
 import com.api.sample.restful.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,28 +14,28 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRespository productRespository;
+    private final ProductRepository productRepository;
 
     public List<ProductVO> findAll() {
-        return productRespository.findAll().stream()
+        return productRepository.findAll().stream()
                 .map(p -> getProductVO(p))
                 .collect(Collectors.toList())
                 ;
     }
 
     public Optional<ProductVO> findById(Long id) {
-        return productRespository
+        return productRepository
                 .findById(id)
                 .map(p -> getProductVO(p))
                 ;
     }
 
     public ProductVO save(ProductVO product) {
-        return getProductVO(productRespository.save(this.getProduct(product)));
+        return getProductVO(productRepository.save(this.getProduct(product)));
     }
 
     public void deleteById(Long id) {
-        productRespository.deleteById(id);
+        productRepository.deleteById(id);
     }
 
     /**
