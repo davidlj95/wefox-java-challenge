@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>CRUD Sample with Spring Boot, MySQL and JS</title>
+  <link href="https://unpkg.com/bootstrap@3.4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/accounts.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <h1>Account CRUD</h1>
+    <main id="app">
+      <router-view></router-view>
+    </main>
+  </div>
+
+  <template id="account">
+    <div>
+      <h2>{{ account.name }}</h2>
+      <b>Email: </b>
+      <div>{{ account.email }}</div>
+      <b>Age: </b>
+      <div>{{ account.age }}</div>
+      <b>Addresses:</b>
+      <ul>
+        <li v-for="address of account.addresses">{{ address.address }}</li>
+      </ul>
+      <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+      <a>
+        <router-link to="/">Back to account list</router-link>
+      </a>
+    </div>
+  </template>
+
+  <template id="account-list">
+    <div>
+      <div class="actions">
+        <a class="btn btn-default">
+          <router-link :to="{name: 'account-add'}">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add account
+          </router-link>
+        </a>
+      </div>
+      <div class="filters row">
+        <div class="form-group col-sm-3">
+          <input placeholder="Search" v-model="searchKey" class="form-control" id="search-element" required/>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Age</th>
+          <th>Adresses</th>
+          <th class="col-sm-2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="account in filteredAccounts">
+          <td>
+            <a>
+              <router-link
+                      :to="{name: 'account', params: {account_id: account.id}}">
+                {{ account.name }}
+              </router-link>
+            </a>
+          </td>
+          <td>{{ account.email }}</td>
+          <td>{{ account.age }}</td>
+          <td>
+            <span class="address" v-for="address of account.addresses">{{ address.address }}</span>
+          </td>
+          <td>
+            <a class="btn btn-warning btn-xs">
+              <router-link
+                      :to="{name: 'account-edit', params: {account_id: account.id}}">
+                Edit
+              </router-link>
+            </a>
+            <a class="btn btn-danger btn-xs">
+              <router-link
+                      :to="{name: 'account-delete', params: {account_id: account.id}}">
+                Delete
+              </router-link>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+
+  <template id="account-add">
+    <div>
+      <h2>Add new account</h2>
+      <form @submit="createAccount">
+        <div class="form-group">
+          <label for="add-name">Name</label>
+          <input class="form-control" id="add-name" v-model="account.name" required/>
+        </div>
+        <div class="form-group">
+          <label for="add-email">Email</label>
+          <input class="form-control" type="email" id="add-email" v-model="account.email" />
+        </div>
+        <div class="form-group">
+          <label for="add-age">Age</label>
+          <input class="form-control" id="add-age" v-model="account.age"
+                 type="number" data-bv-integer-message="The value is not an integer" />
+        </div>
+        <div class="form-group">
+          <h3>Addresses</h3>
+          <div class="form-group" v-for="(address, index) in account.addresses">
+            <label :for="'add-address-' + (index+1) + '-address'">
+              Address no. {{ index }}</label>
+            <input :id="'add-address-' + (index+1) + '-address'"
+                   class="form-control" v-model="address.address" required />
+            <button type="button" class="btn btn-danger" v-on:click="removeAddress(index)">
+              Remove address
+            </button>
+          </div>
+          <button type="button" class="btn btn-default" @click="addAddress">
+            Add an address
+          </button>
+        </div>
+        <br><hr>
+        <button type="submit" class="btn btn-primary" >Create</button>
+        <a class="btn btn-default">
+          <router-link to="/">Cancel</router-link>
+        </a>
+      </form>
+    </div>
+  </template>
+
+  <template id="account-edit">
+    <div>
+      <h2>Edit account</h2>
+      <form @submit="updateAccount">
+        <div class="form-group">
+          <label for="edit-name">Name</label>
+          <input class="form-control" id="edit-name" v-model="account.name" required/>
+        </div>
+        <div class="form-group">
+          <label for="edit-email">Email</label>
+          <input class="form-control" type="email" id="edit-email" v-model="account.email" />
+        </div>
+        <div class="form-group">
+          <label for="edit-age">Age</label>
+          <input class="form-control" type="number" id="edit-age" v-model="account.age" data-bv-integer-message="The value is not an integer" />
+        </div>
+        <div class="form-group">
+          <h3>Addresses</h3>
+          <div class="form-group" v-for="(address, index) in account.addresses">
+            <label :for="'add-address-' + (index+1) + '-address'">
+              Address no. {{ index }}</label>
+            <input :id="'add-address-' + (index+1) + '-address'"
+                   class="form-control" v-model="address.address" required />
+            <button type="button" class="btn btn-danger" v-on:click="removeAddress(index)">
+              Remove address
+            </button>
+          </div>
+          <button type="button" class="btn btn-default" @click="addAddress">
+            Add an address
+          </button>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-default">
+          <router-link to="/">Cancel</router-link>
+        </a>
+      </form>
+    </div>
+  </template>
+
+  <template id="account-delete">
+    <div>
+      <h2>Delete account {{ account.name }}</h2>
+      <form @submit="deleteAccount">
+        <p>The action cannot be undone.</p>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a class="btn btn-default">
+          <router-link to="/">Cancel</router-link>
+        </a>
+      </form>
+    </div>
+  </template>
+
+  <script src="https://unpkg.com/vue@2.5.22/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.0.2/dist/vue-router.js"></script>
+  <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+  <script src="/accounts.js"></script>
+
+</body>
+</html>

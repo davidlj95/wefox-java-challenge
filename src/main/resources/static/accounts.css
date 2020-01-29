@@ -1,0 +1,9 @@
+.actions {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+/** Address list separator in account list address column **/
+.address:not(:last-child)::after {
+  content: ", "
+}

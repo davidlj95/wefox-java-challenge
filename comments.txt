@@ -1,0 +1,10 @@
+- Updated pom.xml JCenter repo to use https (http not working anymore in 2020)
+- Docker: why don't linking all containers in a network to avoid changing IPs?
+- Fixed security issue with CSRF (all web API calls returned 403 Forbidden)
+- Move "/" to "/products" to create "/addresses"
+- Should we apply validations to age, email? (null, format)
+- Can an account have 0 addresses (domain question)?
+- Integration / E2E tests should be created (pretty important!)
+- Missing return in ProductAPI:37
+- Aggregate / composition implementation of Account -> Address depends on front
+- Frontend search doesn't scale at all -> use backend search via API queries
