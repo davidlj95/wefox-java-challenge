@@ -1,0 +1,27 @@
+The SQLite database for pokemons has been obtained from
+
+https://veekun.com/dex/downloads
+https://veekun.com/static/pokedex/downloads/veekun-pokedex.sqlite.gz
+
+The SQLite database has been reduced to only contain the basic information we
+need (the identifier and some attributes) as the initial size of the database
+was 50+MB. The reduced size is ~48KB.
+
+To do so, we just kept the "pokemons" table and created an index
+"ix_pokemon_identifier" to search by the pokemon name.
+
+The commands used to do so are:
+
+```sh
+# Remove all tables except pokemon
+sqlite3 veekun-pokedex.sqlite \
+    'SELECT "DROP TABLE " || name || ";" FROM sqlite_master WHERE name NOT IN
+    ("pokemon");' \
+    | sqlite3 veekun-pokedex.sqlite
+# Add index to retrieve pokemons by name (identifier)
+sqlite veekun-pokedex.sqlite \
+    'CREATE INDEX "ix_pokemon_identifier" ON "pokemon" ("identifier");'
+```
+
+
+

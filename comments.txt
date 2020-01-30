@@ -8,3 +8,7 @@
 - Missing return in ProductAPI:37
 - Aggregate / composition implementation of Account -> Address depends on front
 - Frontend search doesn't scale at all -> use backend search via API queries
+- Chose to have a local DB of pokemons instead of using an API:
+  - As I understand the game, rarely new pokemons are added
+  - Having the DB of pokemons in-memory will guarantee high performance and
+  availability versus using an external API
