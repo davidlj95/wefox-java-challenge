@@ -15,5 +15,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/pokemon/**").authenticated()
                 .antMatchers("/**").permitAll()
         ;
+        super.configure(http);
     }
 }
