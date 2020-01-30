@@ -1,5 +1,6 @@
 package com.api.sample.restful.api;
 
+import com.api.sample.restful.service.PokemonAmqpService;
 import com.api.sample.restful.service.PokemonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +20,19 @@ import java.util.List;
 public class PokemonAPI {
 
     private final PokemonService pokemonService;
+    private final PokemonAmqpService pokemonAmqpService;
 
     @GetMapping()
     public ResponseEntity<List<HashMap<String, Object>>> find(
             @RequestParam String name
     ) {
         return ResponseEntity.ok(pokemonService.findByNameStartsWith(name));
+    }
+
+    @GetMapping("/queue")
+    public ResponseEntity<Object> findUsingQueues(
+            @RequestParam String name
+    ) {
+        return ResponseEntity.ok(pokemonAmqpService.addQueryToQueue(name));
     }
 }
