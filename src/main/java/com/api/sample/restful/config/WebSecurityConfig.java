@@ -12,8 +12,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/pokemon/**").authenticated()
-                .antMatchers("/thread/**").authenticated()
+                .antMatchers(
+                        "/pokemon/**",
+                        "/thread/**"
+                ).authenticated()
                 .antMatchers("/**").permitAll()
         ;
         super.configure(http);
